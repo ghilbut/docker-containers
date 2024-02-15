@@ -1,0 +1,47 @@
+version: "3.9"
+networks:
+  default:
+    name: ghilbut
+    external: true
+services:
+  minio:
+    container_name: minio
+    image: quay.io/minio/minio:RELEASE.2024-02-14T21-36-02Z
+    command:
+      - server
+      - /data
+      - --console-address
+      - 0.0.0.0:9001
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: miniopass
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 60s
+      retries: 3
+      start_period: 10s
+      timeout: 1s
+    ports:
+      - "127.0.0.1:9000:9000"
+      - "127.0.0.1:9001:9001"
+    read_only: true
+    restart: always
+    tmpfs: /tmp/.mc
+    volumes:
+      - .data:/data
+  buckets:
+    container_name: minio-buckets
+    depends_on:
+      - minio
+    image: quay.io/minio/mc:RELEASE.2024-02-14T21-19-52Z
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc alias set ghilbut http://minio:9000 minio miniopass;
+      /usr/bin/mc mb ghilbut/loki;  /usr/bin/mc anonymous set public ghilbut/loki;
+      /usr/bin/mc mb ghilbut/mimir; /usr/bin/mc anonymous set public ghilbut/mimir;
+      /usr/bin/mc mb ghilbut/tempo; /usr/bin/mc anonymous set public ghilbut/tempo;
+      exit 0;"
+    read_only: true
+    tmpfs:
+      - /ghilbut
+      - /root/.mc
