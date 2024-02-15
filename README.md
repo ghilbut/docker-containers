@@ -34,3 +34,20 @@ CONTAINER ID   IMAGE                                              COMMAND       
 >$ docker-compose down
 >$ rm -f .data
 >```
+
+## C. PostgreSQL
+
+```shell
+$ cd postgres
+$ docker-compose up -d
+$ docker ps -f name=postgres
+CONTAINER ID   IMAGE           COMMAND                   CREATED         STATUS                   PORTS                      NAMES
+3feae1b6f176   postgres:16.2   "docker-entrypoint.s…"   3 minutes ago   Up 3 minutes (healthy)   127.0.0.1:5432->5432/tcp   postgres
+```
+
+>**Clean**
+>```bash
+>$ cd postgres
+>$ docker-compose down
+>$ rm -f .data
+>```

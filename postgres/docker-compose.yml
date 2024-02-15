@@ -1,0 +1,24 @@
+version: "3.9"
+networks:
+  default:
+    name: ghilbut
+    external: true
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:16.2
+    environment:
+      - POSTGRES_PASSWORD=postgrespw
+    healthcheck:
+      test: pg_isready -U postgres
+      interval: 60s
+      retries: 3
+      start_period: 10s
+      timeout: 1s
+    ports:
+      - "127.0.0.1:5432:5432"
+    read_only: true
+    restart: always
+    tmpfs: /var/run/postgresql
+    volumes:
+      - .data:/var/lib/postgresql/data
