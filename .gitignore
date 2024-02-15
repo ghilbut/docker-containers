@@ -1,0 +1,11 @@
+# macos
+.DS_Store
+
+# Vim
+.*.sw[o|p]
+
+# JetBrains
+.idea
+
+# data
+.data
