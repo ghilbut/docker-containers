@@ -1,0 +1,67 @@
+## https://grafana.com/docs/mimir/latest/references/configuration-parameters/
+
+multitenancy_enabled: false
+
+server:
+  http_listen_address: 0.0.0.0
+  http_listen_port: 9009
+  log_level: warn
+
+distributor:
+  ring:
+    kvstore:
+      store: inmemory
+
+ingester:
+  ring:
+    kvstore:
+      store: inmemory
+    replication_factor: 1
+
+blocks_storage:
+  storage_prefix: blocks
+  #bucket_store:
+  #  sync_dir: /var/lib/mimir/tsdb-sync
+  #tsdb:
+  #  dir: /var/lib/mimir/tsdb
+
+limits:
+  compactor_blocks_retention_period: 24h
+
+compactor:
+  #data_dir: /tmp/mimir/compactor
+  compaction_interval: 5m
+  sharding_ring:
+    kvstore:
+      store: inmemory
+
+store_gateway:
+  sharding_ring:
+    kvstore:
+      store: inmemory
+    replication_factor: 1
+
+#activity_tracker:
+#  filepath: /tmp/mimir/metrics-activity.log
+
+ruler:
+  #rule_path: /tmp/mimir/rule_path
+  ring:
+    kvstore:
+      store: inmemory
+
+ruler_storage:
+  storage_prefix: ruler
+
+usage_stats:
+  enabled: false
+
+common:
+  storage:
+    backend: s3
+    s3:
+      endpoint: minio:9000
+      bucket_name: mimir
+      access_key_id: minio
+      secret_access_key: miniopass
+      insecure: true

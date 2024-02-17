@@ -1,0 +1,99 @@
+## https://grafana.com/docs/tempo/latest/configuration/
+
+stream_over_http_enabled: true
+
+server:
+  http_listen_address: 0.0.0.0
+  http_listen_port: 3200
+  log_level: warn
+
+distributor:
+  ring:
+    kvstore:
+      store: inmemory
+  receivers:
+    jaeger:
+      protocols:
+        thrift_http:
+        grpc:
+        thrift_binary:
+        thrift_compact:
+    otlp:
+      protocols:
+        http:
+        grpc:
+    zipkin:
+
+ingester:
+  lifecycler:
+    ring:
+      kvstore:
+        store: inmemory
+      replication_factor: 1
+  trace_idle_period: 10s
+  max_block_bytes: 1_000_000
+  max_block_duration: 5m
+
+compactor:
+  ring:
+    kvstore:
+      store: inmemory
+  compaction:
+    compaction_window: 1h
+    max_block_bytes: 100_000_000
+    block_retention: 1h
+    compacted_block_retention: 10m
+
+storage:
+  trace:
+    backend: s3
+    s3:
+      bucket: tempo
+      endpoint: minio:9000
+      access_key: minio
+      secret_key: miniopass
+      insecure: true
+      forcepathstyle: true
+    blocklist_poll: 2s
+    pool:
+      max_workers: 100
+      queue_depth: 10000
+
+metrics_generator:
+  ring:
+    kvstore:
+      store: inmemory
+  processor:
+    span_metrics:
+        dimensions:
+          - http.method
+          - http.target
+          - http.status_code
+          - service.version
+    service_graphs:
+        dimensions:
+          - http.method
+          - http.target
+          - http.status_code
+          - service.version
+  registry:
+    collection_interval: 5s
+    external_labels:
+      source: tempo
+      group: 'mythical'
+  storage:
+    path: /var/tempo/generator/wal
+    remote_write:
+      - url: http://mimir:9009/api/v1/push
+        send_exemplars: true
+  traces_storage:
+    path: /var/tempo/generator/traces
+
+overrides:
+  #metrics_generator_processors: ['service-graphs', 'span-metrics','local-blocks'] # The types of metrics generation to enable for each tenant.
+  defaults:
+    metrics_generator:
+      processors:
+        - service-graphs
+        - span-metrics
+        - local-blocks

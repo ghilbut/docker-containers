@@ -1,0 +1,29 @@
+version: "3.9"
+networks:
+  default:
+    name: ghilbut
+    external: true
+services:
+  tempo:
+    container_name: tempo
+    image: grafana/tempo:2.3.1
+    command: [ "-config.file=/etc/tempo/config.yaml" ]
+    healthcheck:
+      test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3200/ready || exit 1" ]
+      interval: 60s
+      retries: 3
+      start_period: 10s
+      timeout: 1s
+    ports:
+      - "127.0.0.1:3200:3200"
+      - "127.0.0.1:4317:4317"
+      - "127.0.0.1:4318:4318"
+      - "127.0.0.1:9411:9411"
+      - "127.0.0.1:55680:55680"
+      - "127.0.0.1:55681:55681"
+      - "127.0.0.1:14250:14250"
+    read_only: true
+    restart: always
+    volumes:
+      - ./tempo.yaml:/etc/tempo/config.yaml:ro
+      - ../.data/grafana-tempo:/var/tempo

@@ -1,0 +1,41 @@
+## https://grafana.com/docs/loki/latest/configure/
+
+auth_enabled: false
+
+server:
+  http_listen_address: 0.0.0.0
+  http_listen_port: 3100
+  log_level: warn
+
+schema_config:
+  configs:
+    - from: 2024-02-09
+      index:
+        period: 24h
+        prefix: index_
+      object_store: s3
+      schema: v12
+      store: tsdb
+
+limits_config:
+  enforce_metric_name: false
+  reject_old_samples: true
+  reject_old_samples_max_age: 24h
+
+analytics:
+  reporting_enabled: false
+
+common:
+  path_prefix: /loki
+  storage:
+    s3:
+      s3forcepathstyle: true
+      bucketnames: loki
+      endpoint: minio:9000
+      access_key_id: minio
+      secret_access_key: miniopass
+      insecure: true
+  replication_factor: 1
+  ring:
+    kvstore:
+      store: inmemory

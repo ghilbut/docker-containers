@@ -1,0 +1,25 @@
+version: "3.9"
+networks:
+  default:
+    name: ghilbut
+    external: true
+services:
+  mimir:
+    container_name: mimir
+    image: grafana/mimir:2.11.0
+    command: [ "-ingester.native-histograms-ingestion-enabled=true", "-config.file=/etc/mimir/config.yaml" ]
+    healthcheck:
+      test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:9009/ready || exit 1" ]
+      interval: 60s
+      retries: 3
+      start_period: 10s
+      timeout: 1s
+    ports:
+      - "127.0.0.1:9009:9009"
+    read_only: true
+    restart: always
+    tmpfs: /tmp/mimir
+    volumes:
+      - ./mimir.yaml:/etc/mimir/config.yaml:ro
+      - ../.data/grafana-mimir:/var/lib/mimir
+    working_dir: /var/lib/mimir

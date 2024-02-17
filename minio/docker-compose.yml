@@ -37,9 +37,10 @@ services:
     entrypoint: >
       /bin/sh -c "
       /usr/bin/mc alias set ghilbut http://minio:9000 minio miniopass;
-      /usr/bin/mc mb ghilbut/loki;  /usr/bin/mc anonymous set public ghilbut/loki;
-      /usr/bin/mc mb ghilbut/mimir; /usr/bin/mc anonymous set public ghilbut/mimir;
-      /usr/bin/mc mb ghilbut/tempo; /usr/bin/mc anonymous set public ghilbut/tempo;
+      /usr/bin/mc mb ghilbut/loki;       /usr/bin/mc anonymous set public ghilbut/loki;
+      /usr/bin/mc mb ghilbut/mimir;      /usr/bin/mc anonymous set public ghilbut/mimir;
+      /usr/bin/mc mb ghilbut/pyroscope;  /usr/bin/mc anonymous set public ghilbut/pyroscope;
+      /usr/bin/mc mb ghilbut/tempo;      /usr/bin/mc anonymous set public ghilbut/tempo;
       exit 0;"
     read_only: true
     tmpfs:
