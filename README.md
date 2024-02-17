@@ -123,3 +123,22 @@ CONTAINER ID   IMAGE                     COMMAND                  CREATED       
 >$ docker-compose down
 >$ rm -f ../.data/grafana-tempo
 >```
+
+### D5. Grafana
+
+```shell
+$ cd grafana
+$ docker exec -it postgres psql -U postgres -c 'CREATE DATABASE grafana ENCODING utf8;'
+$ docker-compose up -d
+$ docker ps -f name=grafana
+CONTAINER ID   IMAGE                    COMMAND     CREATED         STATUS                   PORTS                      NAMES
+d23cc7685e5c   grafana/grafana:10.3.3   "/run.sh"   2 minutes ago   Up 2 minutes (healthy)   127.0.0.1:3000->3000/tcp   grafana
+```
+
+>**Clean**
+>```bash
+>$ cd grafana
+>$ docker-compose down
+>$ docker exec -it postgres psql -U postgres -c 'DROP DATABASE grafana;'
+>$ rm -rf ../.data/grafana
+>```
