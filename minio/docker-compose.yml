@@ -28,7 +28,7 @@ services:
     restart: always
     tmpfs: /tmp/.mc
     volumes:
-      - .data:/data
+      - ../.data/minio:/data
   buckets:
     container_name: minio-buckets
     depends_on:

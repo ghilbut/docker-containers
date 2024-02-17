@@ -32,7 +32,7 @@ CONTAINER ID   IMAGE                                              COMMAND       
 >```bash
 >$ cd minio
 >$ docker-compose down
->$ rm -f .data
+>$ rm -f ../.data/minio
 >```
 
 ## C. PostgreSQL
@@ -49,7 +49,7 @@ CONTAINER ID   IMAGE           COMMAND                   CREATED         STATUS 
 >```bash
 >$ cd postgres
 >$ docker-compose down
->$ rm -f .data
+>$ rm -f ../.data/postgres
 >```
 
 ## D. Grafana Stack
@@ -70,7 +70,7 @@ aa5f6a3df816   grafana/mimir:2.11.0   "/bin/mimir -ingeste…"   2 minutes ago  
 >```bash
 >$ cd grafana-mimir
 >$ docker-compose down
->$ rm -f .data
+>$ rm -f ../.data/grafana-mimir
 >```
 
 ### D2. Loki
@@ -87,7 +87,7 @@ CONTAINER ID   IMAGE                COMMAND                   CREATED         ST
 >```bash
 >$ cd grafana-loki
 >$ docker-compose down
->$ rm -f .data
+>$ rm -f ../.data/grafana-loki
 >```
 
 ### D3. Tempo
@@ -104,7 +104,7 @@ bcea0da0431a   grafana/tempo:2.3.1   "/tempo -config.file…"   2 minutes ago   
 >```bash
 >$ cd grafana-tempo
 >$ docker-compose down
->$ rm -f .data
+>$ rm -f ../.data/grafana-tempo
 >```
 
 ### D4. Pyroscope
@@ -121,5 +121,5 @@ CONTAINER ID   IMAGE                     COMMAND                  CREATED       
 >```bash
 >$ cd grafana-pyroscope
 >$ docker-compose down
->$ rm -f .data
+>$ rm -f ../.data/grafana-tempo
 >```

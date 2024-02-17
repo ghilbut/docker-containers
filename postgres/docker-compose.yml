@@ -21,4 +21,4 @@ services:
     restart: always
     tmpfs: /var/run/postgresql
     volumes:
-      - .data:/var/lib/postgresql/data
+      - ../.data/postgres:/var/lib/postgresql/data
