@@ -1,0 +1,49 @@
+version: "3.9"
+networks:
+  default:
+    name: ghilbut
+    external: true
+services:
+  agent:
+    container_name: grafana-agent
+    image: grafana/agent:v0.39.2
+    command:
+      - -config.expand-env
+      - -config.file=/etc/agent/config.yaml
+      - -server.http.address=0.0.0.0:12345
+    # command:
+    #   - run
+    #   - --server.http.listen-addr=0.0.0.0:12345
+    #   - /etc/agent/config.river
+    devices:
+      - /dev/kmsg:/dev/kmsg
+    # environment:
+    #   - AGENT_MODE=flow
+    #   - GRAFANA_METRICS_WRITE_URL
+    #   - GRAFANA_METRICS_USERNAME
+    #   - GRAFANA_METRICS_API_KEY
+    #   - GRAFANA_LOGS_WRITE_URL
+    #   - GRAFANA_LOGS_USERNAME
+    #   - GRAFANA_LOGS_API_KEY
+    hostname: localhost
+    # ports:
+    #   - "0.0.0.0:6832:6832"
+    #   - "0.0.0.0:12347:12345"
+    #   - "0.0.0.0:12348:12348"
+    #   - "0.0.0.0:55679:55679"
+    privileged: true
+    read_only: true
+    restart: always
+    volumes:
+      - ./agent.yaml:/etc/agent/config.yaml:ro
+      - ./agent.river:/etc/agent/config.river:ro
+      - ../.data/grafana-agent:/tmp/agent
+      # logs
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      # metrics
+      - /:/rootfs:ro
+      - /etc/machine-id:/etc/machine-id:ro
+      - /sys:/sys:ro
+      - /var/lib/docker:/var/lib/docker:ro
+      - /var/run:/var/run:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro

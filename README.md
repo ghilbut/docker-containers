@@ -124,7 +124,9 @@ CONTAINER ID   IMAGE                     COMMAND                  CREATED       
 >$ rm -f ../.data/grafana-tempo
 >```
 
-### D5. Grafana
+### ~~D5. Beyla~~
+
+### D6. Grafana
 
 ```shell
 $ cd grafana
@@ -142,3 +144,20 @@ d23cc7685e5c   grafana/grafana:10.3.3   "/run.sh"   2 minutes ago   Up 2 minutes
 >$ docker exec -it postgres psql -U postgres -c 'DROP DATABASE grafana;'
 >$ rm -rf ../.data/grafana
 >```
+
+### D7. Agent
+
+```shell
+$ cd grafana-agent
+$ docker-compose up -d
+$ docker ps -f name=agent
+
+```
+
+>**Clean**
+>```bash
+>$ cd grafana-agent
+>$ docker-compose down
+>```
+
+### ~~D8. OnCall~~

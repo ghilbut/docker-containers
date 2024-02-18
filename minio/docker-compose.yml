@@ -34,6 +34,8 @@ services:
     depends_on:
       - minio
     image: quay.io/minio/mc:RELEASE.2024-02-14T21-19-52Z
+    labels:
+      - com.docker.compose.oneoff=true
     entrypoint: >
       /bin/sh -c "
       /usr/bin/mc alias set ghilbut http://minio:9000 minio miniopass;

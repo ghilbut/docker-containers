@@ -1,0 +1,81 @@
+logging {
+  level  = "info"
+}
+
+////////////////////////////////////////////////////////////////
+//
+//  Metrics
+//
+
+discovery.docker "containers" {
+  host = "unix:///var/run/docker.sock"
+}
+
+// discovery.relabel "containers" {
+//   targets = [
+//     { "__meta_foo" = "foo", "__address__" = "localhost", "instance" = "one",   "app" = "backend"  },
+//     { "__meta_bar" = "bar", "__address__" = "localhost", "instance" = "two",   "app" = "database" },
+//     { "__meta_baz" = "baz", "__address__" = "localhost", "instance" = "three", "app" = "frontend" },
+//   ]
+//
+//   rule {
+//     source_labels = ["__address__", "instance"]
+//     separator     = "/"
+//     target_label  = "destination"
+//     action        = "replace"
+//   }
+//
+//   rule {
+//     source_labels = ["app"]
+//     action        = "keep"
+//     regex         = "backend"
+//   }
+// }
+
+prometheus.exporter.agent "self" {
+}
+
+prometheus.scrape "agent" {
+  forward_to = [
+    prometheus.remote_write.local.receiver,
+  ]
+
+  targets = prometheus.exporter.agent.self.targets
+}
+
+prometheus.scrape "containers" {
+  forward_to = [
+    prometheus.remote_write.local.receiver,
+  ]
+
+  targets = discovery.docker.containers.targets
+}
+
+// prometheus.exporter.cadvisor "localhost" {
+//   docker_only = true
+// }
+
+prometheus.scrape "infrastructure" {
+  forward_to = [
+    prometheus.remote_write.local.receiver,
+  ]
+
+  job_name = "agent"
+  scrape_interval = "10s"
+
+  targets = [
+    {"__address__" = "mimir:9009", group = "infrastructure", service = "mimir"},
+    {"__address__" = "tempo:3200", group = "infrastructure", service = "tempo"},
+    {"__address__" = "loki:3100", group = "infrastructure", service = "loki"},
+    {"__address__" = "pyroscope:4040", group = "infrastructure", service = "pyroscope"},
+    {"__address__" = "grafana:3000", group = "infrastructure", service = "grafana"},
+  ]
+}
+
+prometheus.remote_write "local" {
+  endpoint {
+    url = "http://mimir:9009/api/v1/push"
+    remote_timeout = "1s"
+  }
+  // wal = "/tmp/agent/metrics/wal"
+}

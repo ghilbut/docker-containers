@@ -5,7 +5,7 @@ multitenancy_enabled: false
 server:
   http_listen_address: 0.0.0.0
   http_listen_port: 9009
-  log_level: warn
+  log_level: info
 
 distributor:
   ring:
@@ -26,6 +26,7 @@ blocks_storage:
   #  dir: /var/lib/mimir/tsdb
 
 limits:
+  max_label_names_per_series: 50
   compactor_blocks_retention_period: 24h
 
 compactor:
