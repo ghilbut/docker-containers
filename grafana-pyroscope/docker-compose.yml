@@ -7,6 +7,10 @@ services:
   pyroscope:
     container_name: pyroscope
     image: grafana/pyroscope:1.4.0
+    command: [ "-config.expand-env=true" ]
+    environment:
+      MINIO_ACCESS_KEY: ${GF_PYROSCOPE_MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${GF_PYROSCOPE_MINIO_SECRET_KEY}
     healthcheck:
       test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:4040/ready || exit 1" ]
       interval: 60s

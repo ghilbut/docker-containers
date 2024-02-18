@@ -25,8 +25,8 @@ storage:
   s3:
     endpoint: minio:9000
     bucket_name: pyroscope
-    secret_access_key: miniopass
-    access_key_id: minio
+    access_key_id: ${MINIO_ACCESS_KEY}
+    secret_access_key: ${MINIO_SECRET_KEY}
     insecure: true
 
 analytics:

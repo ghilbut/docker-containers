@@ -7,7 +7,10 @@ services:
   mimir:
     container_name: mimir
     image: grafana/mimir:2.11.0
-    command: [ "-ingester.native-histograms-ingestion-enabled=true", "-config.file=/etc/mimir/config.yaml" ]
+    command: [ "-config.expand-env=true", "-config.file=/etc/mimir/config.yaml", "-ingester.native-histograms-ingestion-enabled=true" ]
+    environment:
+      MINIO_ACCESS_KEY: ${GF_MIMIR_MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${GF_MIMIR_MINIO_SECRET_KEY}
     healthcheck:
       test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:9009/ready || exit 1" ]
       interval: 60s
