@@ -7,7 +7,7 @@ services:
   pyroscope:
     container_name: pyroscope
     image: grafana/pyroscope:1.4.0
-    command: [ "-config.expand-env=true" ]
+    command: [ "-config.expand-env=true", "-config.file=/etc/pyroscope/config.yaml" ]
     environment:
       MINIO_ACCESS_KEY: ${GF_PYROSCOPE_MINIO_ACCESS_KEY}
       MINIO_SECRET_KEY: ${GF_PYROSCOPE_MINIO_SECRET_KEY}
@@ -23,4 +23,5 @@ services:
     restart: always
     volumes:
       - ./pyroscope.yaml:/etc/pyroscope/config.yaml:ro
-      - ../.data/grafana-pyroscope:/data
+      - ../.data/grafana-pyroscope:/var/lib/pyroscope
+    working_dir: /var/lib/pyroscope
